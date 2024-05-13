@@ -10,6 +10,8 @@ const app = Vue.createApp({
       eventTypeList: [],
       eventDate: '',
       guestsEstimation: '',
+      disponibilityResponse: false,
+      eventPrice: '',
       social_name: '',
       phone: '',
       email: '',
@@ -103,7 +105,8 @@ const app = Vue.createApp({
       let response = await fetch(url)
       data = await response.json()
       console.log(data)
-      
+      this.disponibilityResponse = true
+      this.eventPrice = data.event_price
     }
   }
 
