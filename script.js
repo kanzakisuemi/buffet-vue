@@ -10,7 +10,9 @@ const app = Vue.createApp({
       eventTypeList: [],
       eventDate: '',
       guestsEstimation: '',
-      disponibilityResponse: false,
+      disponibilityRequested: false,
+      disponibilityResponse: '',
+      disponibilityResponseContent: '',
       eventPrice: '',
       social_name: '',
       phone: '',
@@ -99,14 +101,25 @@ const app = Vue.createApp({
     },
 
     async checkDisponibility(eventTypeId) {
-      let eventDate = this.eventDate
-      let guestsEstimation = this.guestsEstimation
-      let url = `http://localhost:3000/api/v1/event_types/${eventTypeId}/available?order[event_type_id]=${eventTypeId}&order[event_date]=${eventDate}&order[guests_estimation]=${guestsEstimation}`
-      let response = await fetch(url)
-      data = await response.json()
-      console.log(data)
-      this.disponibilityResponse = true
-      this.eventPrice = data.event_price
+      try {
+        let eventDate = this.eventDate
+        let guestsEstimation = this.guestsEstimation
+        let url = `http://localhost:3000/api/v1/event_types/${eventTypeId}/available?order[event_type_id]=${eventTypeId}&order[event_date]=${eventDate}&order[guests_estimation]=${guestsEstimation}`
+        let response = await fetch(url)
+        data = await response.json()
+        console.log(data)
+        this.disponibilityRequested = true
+        if (response.status == 422) {
+          this.disponibilityResponse = data.toString()
+          this.disponibilityResponseContent = "O buffet não possui disponibilidade para realizar este evento."
+        } else if (response.status == 200) {
+          this.disponibilityResponse = data.success
+          this.disponibilityResponseContent = "O buffet possui disponibilidade para realizar este evento."
+          this.eventPrice = data.event_price
+        }
+      } catch (error) {
+        
+      }
     }
   }
 

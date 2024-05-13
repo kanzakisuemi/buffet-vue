@@ -43,8 +43,10 @@
       <div v-if="eventTypesContent" class="card container">
         <div class="card-body">
           <h5 class="card-title">Tipos de Evento de {{  }}</h5>
-          <div v-if="disponibilityResponse" class="alert alert-info">
-            <p>Evento disponível por: R${{ eventPrice }}, com possibilidade de acréscimos ou descontos</p>
+          <div v-if="disponibilityRequested" class="alert alert-info">
+            <p>{{ disponibilityResponse }}</p>
+            <p>{{ disponibilityResponseContent }}</p>
+            <p v-if="eventPrice">Valor do evento: R${{ eventPrice }} (com possibilidade de acréscimos ou descontos)</p>
           </div>
           <div v-for="eventType in eventTypeList" class="card" style="width: 18rem;">
             <div class="card-body">
