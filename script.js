@@ -9,7 +9,7 @@ const app = Vue.createApp({
       buffetToShowEventTypes: null,
       eventTypeList: [],
       eventDate: '',
-      guestsEstimation: '',    
+      guestsEstimation: '',
       social_name: '',
       phone: '',
       email: '',
@@ -95,20 +95,16 @@ const app = Vue.createApp({
       console.log(data)
 
     },
+
     async checkDisponibility(eventTypeId) {
       let eventDate = this.eventDate
       let guestsEstimation = this.guestsEstimation
-      let order = Object()
-      order.event_id = eventTypeId
-      order.event_date = eventDate
-      order.guests_estimation = guestsEstimation
-      console.log(order)
-      let response = await fetch('http://localhost:3000/api/v1/event_types/' + eventTypeId + '/available?' + order)
+      let url = `http://localhost:3000/api/v1/event_types/${eventTypeId}/available?order[event_type_id]=${eventTypeId}&order[event_date]=${eventDate}&order[guests_estimation]=${guestsEstimation}`
+      let response = await fetch(url)
       data = await response.json()
-      console.log() 
-
+      console.log(data)
+      
     }
-
   }
 
 })
