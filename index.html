@@ -9,7 +9,7 @@
   <body>
     <div id="app" class="">
 
-      <nav class="navbar bg-body-tertiary z-0">
+      <nav class="navbar bg-body-tertiary">
         <form class="container-fluid">
           <div class="input-group">
             <img src="search-icon.png" alt="" style="height: 45px;" class="input-group-text">
@@ -18,45 +18,49 @@
         </form>
       </nav>
 
-      <div v-if="resultList.length <= 0" class="text-center z-0">
+      <div v-if="resultList.length <= 0" class="text-center">
         Nenhum buffet encontrado.
       </div>
 
-      <ul class="d-flex flex-wrap justify-content-center z-0">
-        <li v-for="buffet, index in resultList" class="card mb-2 mx-4" style="width: 18rem;">
+      <ul class="d-flex flex-wrap justify-content-center">
+        <li v-for="buffet, index in resultList" class="card mb-2 mx-4 overflow-y-auto" style="width: 18rem; height: 14rem;">
           <div class="card-body">
             <h5 class="card-title">{{ buffet.social_name }} {{ buffet.city }}</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">{{ buffet.email }}</h6>
             <p>{{ buffet.city }}</p>
-            <button v-on:click="showDetails(buffet.id)">Ver detalhes</button>
-            <button v-on:click="showEventTypes(buffet.id)">Ver tipos de evento</button>
+            <button v-on:click="showDetails(buffet.id)" class="mt-1">Ver detalhes</button>
+            <button v-on:click="showEventTypes(buffet.id, buffet.social_name)" class="mt-1">Ver tipos de evento</button>
           </div>
           <ul v-if="buffetDetails && buffet.id === buffetToShowDetails" class="list-group list-group-flush">
             <li class="list-group-item">Telefone: {{ phone }}</li>
-            <li class="list-group-item">Endereço: {{ address }}, {{ neighborhood }}, {{ city }}, {{ state }}, {{ zip_code }}</li>
+            <li class="list-group-item">Endereço: {{ address }}, {{ neighborhood }}, {{ city }} - {{ state }}, {{ zip_code }}</li>
             <li class="list-group-item">Descrição: {{ description }}</li>
             <li class="list-group-item">Eventos por dia: {{ events_per_day }}</li>
           </ul>
         </li>
       </ul>
 
-      <div v-if="eventTypesContent" class="card container">
-        <div class="card-body">
-          <h5 class="card-title">Tipos de Evento de {{  }}</h5>
-          <div v-if="disponibilityRequested" class="alert alert-info">
+      <div v-if="eventTypesContent" class="card container mb-3">
+        <div class="card-body d-flex flex-wrap justify-content-center">
+          <button v-on:click="hideEventTypes" class="btn btn-close btn-sm position-absolute top-0 start-0 ms-3 mt-3"></button>
+          <h5 class="card-title d-block w-100 text-center mb-3">Tipos de Evento de {{ buffetName }}</h5>
+          <div v-if="eventTypeList.length <= 0" class="text-center">
+            Nenhum evento encontrado.
+          </div>
+          <div v-if="disponibilityRequested" class="alert alert-info d-block w-100">
             <p>{{ disponibilityResponse }}</p>
             <p>{{ disponibilityResponseContent }}</p>
             <p v-if="eventPrice">Valor do evento: R${{ eventPrice }} (com possibilidade de acréscimos ou descontos)</p>
           </div>
-          <div v-for="eventType in eventTypeList" class="card" style="width: 18rem;">
+          <div v-for="eventType in eventTypeList" class="card mx-4" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{ eventType.name }}</h5>
               <h6 class="card-subtitle mb-2">{{ eventType.description }}</h6>
               <p>Capacidade máxima de convidados: {{ eventType.maximal_people_capacity }}</p>
               <hr>
               <h6 class="card-subtitle mb-2">Conferir disponibilidade</h6>
-              <input v-model="eventDate" type="date" class="form-control mb-2">
-              <input v-model="guestsEstimation" type="text" class="form-control mb-2">
+              <input v-model="eventDate" type="date" class="form-control mb-2" required>
+              <input v-model="guestsEstimation" type="text" class="form-control mb-2" required>
               <button v-on:click="checkDisponibility(eventType.id)">Conferir disponibilidade</button>
             </div>
           </div>

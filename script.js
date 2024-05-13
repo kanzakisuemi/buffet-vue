@@ -8,6 +8,7 @@ const app = Vue.createApp({
       eventTypesContent: false,
       buffetToShowEventTypes: null,
       eventTypeList: [],
+      buffetName: '',
       eventDate: '',
       guestsEstimation: '',
       disponibilityRequested: false,
@@ -23,8 +24,7 @@ const app = Vue.createApp({
       state: '',
       zip_code: '',
       description: '',
-      events_per_day: '',
-      picture: 'https://i.pinimg.com/originals/75/4f/a1/754fa124b621f260d97c9fd5581251f8.jpg'
+      events_per_day: ''
     }
   },
 
@@ -90,35 +90,35 @@ const app = Vue.createApp({
       this.events_per_day = data.events_per_day
     },
 
-    async showEventTypes(buffetId) {
+    async showEventTypes(buffetId, buffetName) {
+      console.log(buffetName)
+      this.buffetName = buffetName
       let response = await fetch('http://localhost:3000/api/v1/buffets/' + buffetId + '/event_types/')
       data = await response.json()
       this.eventTypesContent = true
       this.buffetToShowEventTypes = buffetId
       this.eventTypeList = data
-      console.log(data)
+    },
 
+    hideEventTypes() {
+      this.eventTypesContent = false
     },
 
     async checkDisponibility(eventTypeId) {
-      try {
-        let eventDate = this.eventDate
-        let guestsEstimation = this.guestsEstimation
-        let url = `http://localhost:3000/api/v1/event_types/${eventTypeId}/available?order[event_type_id]=${eventTypeId}&order[event_date]=${eventDate}&order[guests_estimation]=${guestsEstimation}`
-        let response = await fetch(url)
-        data = await response.json()
-        console.log(data)
-        this.disponibilityRequested = true
-        if (response.status == 422) {
-          this.disponibilityResponse = data.toString()
-          this.disponibilityResponseContent = "O buffet não possui disponibilidade para realizar este evento."
-        } else if (response.status == 200) {
-          this.disponibilityResponse = data.success
-          this.disponibilityResponseContent = "O buffet possui disponibilidade para realizar este evento."
-          this.eventPrice = data.event_price
-        }
-      } catch (error) {
-        
+      let eventDate = this.eventDate
+      let guestsEstimation = this.guestsEstimation
+      let url = `http://localhost:3000/api/v1/event_types/${eventTypeId}/available?order[event_type_id]=${eventTypeId}&order[event_date]=${eventDate}&order[guests_estimation]=${guestsEstimation}`
+      let response = await fetch(url)
+      data = await response.json()
+      console.log(data)
+      this.disponibilityRequested = true
+      if (response.status == 422) {
+        this.disponibilityResponse = data
+        this.disponibilityResponseContent = "O buffet não possui disponibilidade para realizar este evento."
+      } else if (response.status == 200) {
+        this.disponibilityResponse = data.success
+        this.disponibilityResponseContent = "O buffet possui disponibilidade para realizar este evento."
+        this.eventPrice = data.event_price
       }
     }
   }
