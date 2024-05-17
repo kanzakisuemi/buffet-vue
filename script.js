@@ -25,7 +25,8 @@ const app = Vue.createApp({
       zip_code: '',
       description: '',
       events_per_day: '',
-      rating_average: ''
+      rating_average: '',
+      star: false
     }
   },
 
@@ -77,7 +78,6 @@ const app = Vue.createApp({
     async showDetails(buffetId) {
       let response = await fetch('http://localhost:3000/api/v1/buffets/' + buffetId)
       data = await response.json()
-      console.log(data)
       this.buffetDetails = true
       this.buffetToShowDetails = buffetId
       this.social_name = data.social_name
@@ -91,8 +91,10 @@ const app = Vue.createApp({
       this.description = data.description
       this.events_per_day = data.events_per_day
       if (data.rating_average == null) {
+        this.star = false
         this.rating_average = '--'
       } else {
+        this.star = true
         this.rating_average = data.rating_average
       }
     },

@@ -36,7 +36,7 @@
             <li class="list-group-item">Endereço: {{ address }}, {{ neighborhood }}, {{ city }} - {{ state }}, {{ zip_code }}</li>
             <li class="list-group-item">Descrição: {{ description }}</li>
             <li class="list-group-item">Eventos por dia: {{ events_per_day }}</li>
-            <li class="list-group-item">Qualidade: {{ rating_average }}</li>
+            <li class="list-group-item">Avaliado em: {{ rating_average }} <span v-if="star">⭐</span></li>
           </ul>
         </li>
       </ul>
